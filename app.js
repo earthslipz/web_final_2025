@@ -406,13 +406,11 @@ app.post('/add-product', isAdmin, upload.single('mainImage'), async (req, res) =
     const {
         PName, PShop, PCategory, PPrice, PSize, PMaterial, PYear, PQuantity, PDescription, PSeries
     } = req.body;
-
     // Debug logging
     console.log('Form data:', {
         PName, PShop, PCategory, PPrice, PSize, PYear, PDescription, PSeries, PMaterial, PQuantity
     });
     console.log('File:', req.file);
-
     // Validation
     const missingFields = [];
     if (!PName) missingFields.push('Product name');
@@ -423,7 +421,6 @@ app.post('/add-product', isAdmin, upload.single('mainImage'), async (req, res) =
     if (!PYear) missingFields.push('Year');
     if (!PDescription) missingFields.push('Description');
     if (!req.file) missingFields.push('Main image');
-
     if (missingFields.length > 0) {
         console.log('Missing fields:', missingFields);
         return res.render('add', {
@@ -431,11 +428,9 @@ app.post('/add-product', isAdmin, upload.single('mainImage'), async (req, res) =
             error: `Required fields are missing: ${missingFields.join(', ')}`
         });
     }
-
     const PPriceNum = parseFloat(PPrice);
     const PYearNum = parseInt(PYear);
     const PQuantityNum = parseInt(PQuantity) || 0;
-
     if (isNaN(PPriceNum) || isNaN(PYearNum)) {
         console.log('Invalid numbers:', { PPrice, PYear });
         return res.render('add', {
@@ -443,18 +438,14 @@ app.post('/add-product', isAdmin, upload.single('mainImage'), async (req, res) =
             error: 'Price and Year must be valid numbers'
         });
     }
-
     // Generate PID
     const PID = await generatePID();
-
     // Handle image
     const PImage = `/image/uploads/${req.file.filename}`;
-
     // Append Series to Description if provided
     const finalDescription = PSeries ? 
         (PDescription ? `${PDescription}\nSeries: ${PSeries}` : `Series: ${PSeries}`) : 
         PDescription;
-
     const query = `
         INSERT INTO postOfProduct (
             PID, PName, PShop, PCategory, PPrice, PSize, PMaterial, PYear, PQuantity, PImage, PDescription
@@ -473,7 +464,6 @@ app.post('/add-product', isAdmin, upload.single('mainImage'), async (req, res) =
         PImage,
         finalDescription || null
     ];
-
     connection.query(query, values, (err, result) => {
         if (err) {
             console.error('Database error inserting product:', err);
@@ -621,7 +611,7 @@ app.get('/detail', (req, res) => {
     const productQuery = `
         SELECT PID, PName, PShop, PCategory, PRating, PPrice, PSize, PMaterial, PYear, PImage, PDescription
         FROM postOfProduct
-        WHERE PID ==> ?
+        WHERE PID = ?
     `;
     const recommendedQuery = `
         SELECT PID, PName, PPrice, PImage
@@ -882,7 +872,7 @@ app.post('/api/auth/admin', upload.none(), async (req, res) => {
                 INSERT INTO adminLogin (AdIDLog, Adtime, Addate, AdID_FK)
                 VALUES (?, CURTIME(), CURDATE(), ?)
             `;
-            connection.query आवी, [AdIDLog, admin.AdID], (err) => {
+            connection.query(logQuery, [AdIDLog, admin.AdID], (err) => {
                 if (err) console.error('Error logging admin login:', err);
             });
             res.status(200).json({ message: 'Login successful', adminId: admin.AdID });
@@ -1003,7 +993,7 @@ app.put('/api/products/:pid', isAdmin, upload.single('PImage'), (req, res) => {
     }
     const PPriceNum = parseFloat(PPrice);
     const PYearNum = parseInt(PYear);
-    const PQuantityNum = parseInt(PQuantity) || 0;
+    const PREMIUM = parseInt(PQuantity) || 0;
     if (isNaN(PPriceNum) || isNaN(PYearNum)) {
         return res.status(400).json({ error: 'Price and Year must be valid numbers' });
     }
@@ -1034,7 +1024,7 @@ app.put('/api/products/:pid', isAdmin, upload.single('PImage'), (req, res) => {
         PPriceNum,
         PSize,
         PMaterial || null,
-        PYearNum,
+        PYearNum  = parseInt(PYear),
         PQuantityNum,
         PImage,
         PDescription || null,
