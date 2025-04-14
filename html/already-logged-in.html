@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Already Logged In | Collectopia</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = new bootstrap.Modal(document.getElementById('loggedInModal'));
+            modal.show();
+
+            document.getElementById('loggedInModal').addEventListener('hidden.bs.modal', () => {
+                window.location.href = '/admin'; // Redirect to admin after closing
+            });
+        });
+    </script>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding-top: 100px;
+        }
+        .navbar {
+            background-color: #ffd700;
+            padding: 15px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1030;
+        }
+        .logo {
+            height: 30px;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="image/logo.png" alt="Collectopia" class="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/category">Category</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/team">Team</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/login">Sign-in/Register</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/admin">Profile</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Modal -->
+    <div class="modal fade" id="loggedInModal" tabindex="-1" aria-labelledby="loggedInModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loggedInModalLabel">Already Logged In</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    You are already logged in. Please <a href="/logout">sign out</a> if you want to log in as a different user.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

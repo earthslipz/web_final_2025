@@ -1,0 +1,178 @@
+.logo {
+    height: 30px; /* Adjust height to fit navbar */
+    width: auto;  /* Maintain aspect ratio */
+  }
+
+  
+.navbar {
+    background-color: #ffd700;
+    padding: 15px;
+    width: 100%;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    justify-content: space-between;
+    align-items: center;
+    display: flex;
+}
+
+.navlink {
+    display: flex;
+    list-style-type: none;
+}
+
+.navlink a {
+    color: black;
+    font-weight: bold;
+    margin-right: 15px;
+    text-decoration: none;
+}
+
+.navlink a:hover {
+    text-decoration: underline;
+}
+
+  
+.footer1{
+    background-color: #f6d206;
+    margin-top: 50px;
+    display: flex;
+}
+
+.Fcontainer{
+    width: 100%;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.Fwarp{
+    justify-content: space-between;
+    align-items: flex-start;
+    max-width: 70%;
+    margin: auto;
+    display: flex;
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.footer2{
+    color: #fff;
+    background-color: #1a1b1f;
+    padding: 50px 30px 15px;
+    position: relative;
+}
+
+.Fhead{
+    text-align: center;
+    margin-bottom: 60px;
+}
+
+.Fcontent{
+    grid-column: 70px;
+    grid-row: 40px;
+    grid-template-rows: auto;
+    grid-template-columns: auto auto 1fr;
+    grid-auto-columns: 1fr;
+    display: grid;
+}
+
+.Fblock{
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    display: flex;
+    margin-bottom: 50px;
+}
+
+.Ftitle{
+    text-align: center;
+    letter-spacing: 1px;
+    border-radius: 0px;
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 16px;
+}
+
+.Flink{
+    margin-top: 6px;
+    margin-bottom: 6px;
+    font-size: 14px;
+    line-height: 16px;
+    text-decoration: none;
+    color: #fff;
+}
+
+.Flink:hover{
+    color: #f6d206;
+    transition: all .2s;
+}
+
+.social-icons {
+    margin-top: 10px;
+    }
+    .social-icons a {
+        display: inline-block;
+        margin: 0 10px;
+        font-size: 20px;
+        color: black;
+        transition: color 0.3s;
+    }
+    .social-icons a:hover {
+        color: #007bff;
+    }
+
+.copyright{
+    text-align: center;
+}
+
+.teamcontainer {
+    width: 100%;
+    max-width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.member {
+    width: 100%;
+    height: 100%;
+    gap: 30px;
+}
+
+.memimg {
+    display: block;
+    margin: auto;
+    width: 12vw;
+    height: 12vw;
+    align-items: start;
+    border-radius: 50%;
+    object-fit: cover;
+
+}
+
+.memtxt {
+    color: rgb(0, 0, 0);
+    text-align: center;
+    font-size: 12px;
+}
+
+.Ttitle {
+    color: rgb(0, 0, 0);
+    text-align: center;
+    margin: 50px;
+}
+
+.txtcontainer{
+    width: 100%;
+    max-width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}

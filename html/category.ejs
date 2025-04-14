@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Collectopia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="/js/category.js" defer></script>
+    <link rel="stylesheet" href="/css/category.css"/>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <img src="/image/logo.png" alt="Collectopia" class="logo">
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/category">Category</a></li>
+                <li class="nav-item"><a class="nav-link" href="/team">Team</a></li>
+                <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+                <li class="nav-item"><a class="nav-link" href="/login">Sign-in/Register</a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin">Profile</a></li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+
+    <section class="searchcategory">
+        <div class="Scontainer">
+            <input type="text" id="userinput" placeholder="Search..." oninput="showCSuggestions()">
+            <div id="suggestions-container" class="suggestions"></div>
+        </div>
+    </section>
+
+    <section class="allcategory">
+        <div class="subcategory">
+            <h2 class="Ctitle">All categories:</h2>
+        </div>
+
+        <% categories.forEach((category, index) => { %>
+            <div class="subcategory" onclick="toggleProducts('products<%= index %>')">
+                <p class="Csubtitle"><%= category %></p>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="chevron">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 9l-7.5 7.5L4.5 9" />
+                </svg>
+            </div>
+
+            <div id="products<%= index %>" class="subcategory prodcontainer" style="display: none;">
+                <% if (products[category]) { %>
+                    <% products[category].forEach(product => { %>
+                        <div class="product">
+                            <a href="/detail?pid=<%= product.PID %>">
+                                <img src="<%= product.PImage %>" class="prodimg" alt="<%= product.PName %>">
+                                <h1 class="prodtxt"><%= product.PName %><br>฿ <%= product.PPrice.toFixed(2) %></h1>
+                            </a>
+                        </div>
+                    <% }); %>
+                <% } %>
+            </div>
+
+            <div class="separator"></div>
+        <% }); %>
+    </section>
+
+    <section class="footer1">
+        <div class="Fcontainer" style="padding: 0;">
+            <div class="Fwarp d-flex justify-content-start align-items-center" style="gap: 10px;">
+                <div class="Fsplit2">
+                    <strong><b>FOLLOW US ON</b></strong>
+                </div>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://linkedin.com" target="_blank"><i class="fab fa-discord"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="footer2">
+        <h1 class="Fhead">Thank You For Choosing Our Shop</h1>
+        <div class="Fwarp">
+            <div class="Fcontent">
+                <div class="Fblock">
+                    <div class="Ftitle">CONTACT US</div>
+                    <a href="#" class="Flink">collectopia@dscalc</a>
+                    <a href="#" class="Flink">069 696 6969</a>
+                </div>
+            </div>
+            <div class="Fblock">
+                <div class="Ftitle">SUPPORT</div>
+                <a href="#" class="Flink">FAQ</a>
+                <a href="#" class="Flink">SHIPPING INFO</a>
+                <a href="#" class="Flink">PRIVACY POLICY</a>
+                <a href="#" class="Flink">TERMS & CONDITIONS</a>
+                <a href="#" class="Flink">TRACK YOUR ORDER</a>
+            </div>
+            <div class="Fblock">
+                <div class="Ftitle">ABOUT US</div>
+                <a href="#" class="Flink">NEWS</a>
+                <a href="#" class="Flink">ABOUT COLLECTOPIA</a>
+                <a href="#" class="Flink">INVESTOR RELATIONS</a>
+                <a href="#" class="Flink">CONTACT US</a>
+            </div>
+            <div class="Fblock">
+                <div class="Ftitle">SHOP</div>
+                <a href="#" class="Flink">TRENDING</a>
+                <a href="#" class="Flink">BLIND BOX</a>
+                <a href="#" class="Flink">COLLECTION</a>
+                <a href="#" class="Flink">ANIME</a>
+                <a href="#" class="Flink">GAME</a>
+            </div>
+        </div>
+        <div class="copyright">© 2025 COLLECTOPIA ALL RIGHTS RESERVED</div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collectopia - Modify Products</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/AMD.css">
+    <link rel="stylesheet" href="/css/detailstyle.css">
+    <script src="/js/mod-web.js" defer></script>
+    <script src="/js/detailscript.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+        }
+        .container {
+            width: 100%;
+            padding-right: 15px;
+            padding-left: 15px;
+            margin-right: auto;
+            margin-left: auto;
+        }
+        .mx-auto {
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .px-4 {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        .py-8 {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        .text-lg {
+            font-size: 1.125rem;
+            line-height: 1.75rem;
+        }
+        .font-bold {
+            font-weight: 700;
+        }
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+        .text-2xl {
+            font-size: 1.5rem;
+            line-height: 2rem;
+        }
+        .grid {
+            display: grid;
+            gap: 1rem;
+        }
+        .grid-cols-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+        @media (min-width: 576px) {
+            .sm\:grid-cols-3 {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        @media (min-width: 768px) {
+            .md\:grid-cols-4 {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+        @media (min-width: 992px) {
+            .lg\:grid-cols-5 {
+                grid-template-columns: repeat(5, minmax(0, 1fr));
+            }
+        }
+        .text-center {
+            text-align: center;
+        }
+        .block {
+            display: block;
+        }
+        .mb-2 {
+            margin-bottom: 0.5rem;
+        }
+        .product-item {
+            text-decoration: none;
+            color: #000;
+            transition: all 0.3s ease;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .product-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .product-item div {
+            text-align: left;
+            padding-left: 10px;
+        }
+        .category-container {
+            position: relative;
+            cursor: pointer;
+        }
+        .slide-tab {
+            width: 100%;
+            background: #f8f9fa;
+            padding: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: max-height 0.5s ease, opacity 0.5s ease;
+            overflow: hidden;
+            max-height: 0;
+            opacity: 0;
+        }
+        .slide-tab.active {
+            max-height: 1000px;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/home">
+                <img src="/image/logo.png" alt="Collectopia" class="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/category">Category</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/team">Team</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+                    <% if (user) { %>
+                        <li class="nav-item"><a class="nav-link" href="/admin">Profile (<%= user.firstName %>)</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+                    <% } else { %>
+                        <li class="nav-item"><a class="nav-link" href="/login">Sign-in/Register</a></li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="line" style="height: 1px; background: #e0e0e0;"></div>
+
+    <main class="container mx-auto px-4 py-8">
+        <div class="text-lg font-bold mb-4">
+            Action / Modify
+        </div>
+        <% if (categories && categories.length > 0) { %>
+            <% categories.forEach((category, index) => { %>
+                <div class="category-container">
+                    <div class="text-2xl font-bold mb-4" id="<%= category.toLowerCase().replace(/\s+/g, '-') %>-title">
+                        <%= category %>
+                        <i class="fas fa-angle-down" id="<%= category.toLowerCase().replace(/\s+/g, '-') %>-icon"></i>
+                    </div>
+                    <div class="slide-tab <%= index === 0 ? 'active' : '' %>" id="<%= category.toLowerCase().replace(/\s+/g, '-') %>-tab">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                            <% if (products[category] && products[category].length > 0) { %>
+                                <% products[category].forEach(product => { %>
+                                    <a href="/modify-page?pid=<%= product.PID %>" class="text-center block product-item">
+                                        <img alt="<%= product.PName %>" class="mx-auto mb-2" height="200" src="<%= product.PImage %>" width="150">
+                                        <div><%= product.PName %></div>
+                                        <div>฿ <%= product.PPrice.toFixed(2) %></div>
+                                    </a>
+                                <% }) %>
+                            <% } else { %>
+                                <p>No valid products available in this category.</p>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            <% }) %>
+        <% } else { %>
+            <p>No valid categories with products available.</p>
+        <% } %>
+    </main>
+
+    <section class="footer1">
+        <div class="Fcontainer" style="padding: 0;">
+            <div class="Fwarp d-flex justify-content-start align-items-center" style="gap: 10px;">
+                <div class="Fsplit2">
+                    <strong><b>FOLLOW US ON</b></strong>
+                </div>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://linkedin.com" target="_blank"><i class="fab fa-discord"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="footer2">
+        <h1 class="Fhead">Thank You For Choosing Our Shop</h1>
+        <div class="Fwarp">
+            <div class="Fcontent">
+                <div class="Fblock">
+                    <div class="Ftitle">CONTACT US</div>
+                    <a href="#" class="Flink">collectopia@dscalc</a>
+                    <a href="#" class="Flink">069 696 6969</a>
+                </div>
+            </div>
+            <div class="Fblock">
+                <div class="Ftitle">SUPPORT</div>
+                <a href="#" class="Flink">FAQ</a>
+                <a href="#" class="Flink">SHIPPING INFO</a>
+                <div class="Flink">PRIVACY POLICY</div>
+                <a href="#" class="Flink">TERMS & CONDITIONS</a>
+                <a href="#" class="Flink">TRACK YOUR ORDER</a>
+            </div>
+            <div class="Fblock">
+                <div class="Ftitle">ABOUT US</div>
+                <a href="#" class="Flink">NEWS</a>
+                <a href="#" class="Flink">ABOUT COLLECTOPIA</a>
+                <a href="#" class="Flink">INVESTOR RELATIONS</a>
+                <a href="#" class="Flink">CONTACT US</a>
+            </div>
+            <div class="Fblock">
+                <div class="Ftitle">SHOP</div>
+                <a href="#" class="Flink">TRENDING</a>
+                <a href="#" class="Flink">BLIND BOX</a>
+                <a href="#" class="Flink">COLLECTION</a>
+                <a href="#" class="Flink">ANIME</a>
+                <a href="#" class="Flink">GAME</a>
+            </div>
+        </div>
+        <div class="copyright">© 2025 COLLECTOPIA ALL RIGHTS RESERVED</div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        <% categories.forEach(category => { %>
+            document.querySelector('#<%= category.toLowerCase().replace(/\s+/g, '-') %>-title').addEventListener('click', function() {
+                const tab = document.querySelector('#<%= category.toLowerCase().replace(/\s+/g, '-') %>-tab');
+                const icon = document.querySelector('#<%= category.toLowerCase().replace(/\s+/g, '-') %>-icon');
+                tab.classList.toggle('active');
+                icon.classList.toggle('fa-angle-down');
+                icon.classList.toggle('fa-angle-up');
+            });
+        <% }) %>
+    </script>
+</body>
+</html>

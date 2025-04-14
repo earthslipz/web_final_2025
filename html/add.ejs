@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collectopia - Add Product</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/AMD.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <script src="/js/add_java.js" defer></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fefce8;
+            margin: 0;
+            padding: 0;
+        }
+        main {
+            padding: 2rem;
+        }
+        .error-message {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+        form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        label {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #9ca3af;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        textarea {
+            height: 8rem;
+        }
+        .buttons {
+            grid-column: span 2;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+        }
+        button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .cancel-btn {
+            background-color: #ef4444;
+        }
+        .add-btn {
+            background-color: #22c55e;
+        }
+        .invalid {
+            border-color: #ef4444;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/home">
+                <img src="/image/logo.png" alt="Collectopia" class="logo">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/category">Category</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/team">Team</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+                    <% if (user) { %>
+                        <li class="nav-item"><a class="nav-link" href="/admin">Profile (<%= user.firstName %>)</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+                    <% } else { %>
+                        <li class="nav-item"><a class="nav-link" href="/login">Sign-in/Register</a></li>
+                    <% } %>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="container">
+            <div class="breadcrumb">Admin / Add</div>
+            <% if (error) { %>
+                <div class="error-message"><%= error %></div>
+            <% } %>
+            <h1>Add Product</h1>
+            <form id="add-product-form" action="/add-product" method="POST" enctype="multipart/form-data">
+                <div>
+                    <label for="mainImage">Main Image:*</label>
+                    <input type="file" id="mainImage" name="mainImage" accept="image/*" required>
+                    <label for="PName">Product name:*</label>
+                    <input type="text" id="PName" name="PName" required>
+                    <div class="error-message" id="PName-error"></div>
+                    <label for="PCategory">Category:*</label>
+                    <input type="text" id="PCategory" name="PCategory" required>
+                    <div class="error-message" id="PCategory-error"></div>
+                    <label for="PSeries">Series:</label>
+                    <input type="text" id="PSeries" name="PSeries">
+                    <label for="PDescription">Product description:*</label>
+                    <textarea id="PDescription" name="PDescription" required></textarea>
+                    <div class="error-message" id="PDescription-error"></div>
+                </div>
+                <div>
+                    <label>Product detail:</label>
+                    <label for="PShop">Brand:*</label>
+                    <input type="text" id="PShop" name="PShop" required>
+                    <div class="error-message" id="PShop-error"></div>
+                    <label for="PSize">Size:*</label>
+                    <input type="text" id="PSize" name="PSize" required>
+                    <div class="error-message" id="PSize-error"></div>
+                    <label for="PMaterial">Material:</label>
+                    <input type="text" id="PMaterial" name="PMaterial" placeholder="Choosing...">
+                    <label for="PYear">Year:*</label>
+                    <input type="text" id="PYear" name="PYear" required>
+                    <div class="error-message" id="PYear-error"></div>
+                    <label for="PPrice">Price:*</label>
+                    <input type="text" id="PPrice" name="PPrice" required>
+                    <div class="error-message" id="PPrice-error"></div>
+                    <label for="PQuantity">Quantity:</label>
+                    <input type="number" id="PQuantity" name="PQuantity" min="0" value="0">
+                </div>
+                <div class="buttons">
+                    <button type="button" class="cancel-btn" onclick="window.location.href='/admin'">Cancel</button>
+                    <button type="submit" class="add-btn">Add Product</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Collectopia - <%= product.name %></title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link rel="stylesheet" href="/css/detail.css" />
+    <script src="/js/home.js" defer></script>
+    <script src="/js/detailscript.js" defer></script>
+    <link rel="stylesheet" href="/css/detailstyle.css" />
+</head>
+
+<body>
+    <!-- Top Navbar -->
+    <div class="top">
+        <nav class="navbar navbar-expand-lg">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/home"><img id="logo" src="/image/logo.png" style="width: 150px;" alt="Collectopia Logo"></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/category">Category</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/team">Team</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/login">Sign-in/Register</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/admin">Profile</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Product Detail Section -->
+    <section class="product-detail">
+        <div class="container">
+            <div class="detail-whole">
+                <div class="ProductImg">
+                    <div class="ListImg">
+                        <img src="<%= product.image %>" alt="Main Product Image" class="ProductListImg">
+                        <!-- Additional static images (can be made dynamic later if needed) -->
+                        <img src="/image/detailpage/other/purplecolor.png" alt="Color Variant 1" class="ProductListImg">
+                        <img src="/image/detailpage/other/greencolor.png" alt="Color Variant 2" class="ProductListImg">
+                        <img src="/image/detailpage/other/redcolor.png" alt="Color Variant 3" class="ProductListImg">
+                        <img src="/image/detailpage/other/bluecolor.png" alt="Color Variant 4" class="ProductListImg">
+                    </div>
+                    <div class="Preview">
+                        <img src="<%= product.image %>" alt="Preview Product Image" class="ProductPreview">
+                    </div>
+                </div>
+
+                <div class="ProductDetail">
+                    <div class="ProductDetail-flexrow" alt="category">
+                        <b>Category: </b>
+                        <b id="category"><%= product.category %></b>
+                    </div>
+
+                    <div class="ProductDetail-flexrow" alt="product name">
+                        <h1 id="productname"><%= product.name %></h1>
+                        <img id="icon_hart" src="/image/detailpage/icon/icon_hart.png" class="icon" 
+                             style="cursor: pointer;" onclick="iconcolor('icon_hart')">
+                    </div>
+
+                    <div class="ProductDetail-flexrow" alt="product from">
+                        <h6>From </h6>
+                        <h6 id="productfrom"><%= product.shop || 'N/A' %></h6>
+                    </div>
+
+                    <div class="ProductDetail-flexrow" alt="product rating">
+                        <h6><%= product.rating || 'N/A' %></h6>
+                        <div class="ProductDetail-flexrow" alt="rating star">
+                            <img id="s1" src="/image/detailpage/icon/Icon_star.png" class="icon">
+                            <img id="s2" src="/image/detailpage/icon/Icon_star.png" class="icon">
+                            <img id="s3" src="/image/detailpage/icon/Icon_star.png" class="icon">
+                            <img id="s4" src="/image/detailpage/icon/Icon_star.png" class="icon">
+                            <img id="s5" src="/image/detailpage/icon/Icon_star.png" class="icon">
+                        </div>
+                        <h6 id="norating"><%= product.rating || 'N/A' %></h6>
+                        <h6> rating</h6>
+                    </div>
+
+                    <div class="ProductDetail-flexrow" alt="product price" style="font-style: italic;">
+                        <h5>Price: </h5>
+                        <h1 id="price"><%= product.price %></h1>
+                        <h1> ฿</h1>
+                    </div>
+
+                    <table alt="product detail">
+                        <tr>
+                            <td colspan="2">
+                                <h5><br>Product details: </h5>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><p>Size:</p></td>
+                            <td><p id="productsize"><%= product.size || 'N/A' %></p></td>
+                        </tr>
+                        <tr>
+                            <td><p>Material:</p></td>
+                            <td><p id="productmaterial"><%= product.material || 'N/A' %></p></td>
+                        </tr>
+                        <tr>
+                            <td><p>Year:</p></td>
+                            <td><p id="productyear"><%= product.year || 'N/A' %></p></td>
+                        </tr>
+                    </table>
+
+                    <div class="ProductDetail-button" alt="button">
+                        <div class="quantity">
+                            <span class="minus">-</span>
+                            <p> Quantity: </p>
+                            <span class="num">01</span>
+                            <span class="plus">+</span>
+                        </div>
+                        <div class="addcart">
+                            <span>Add to Cart</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Break Line -->
+    <div class="line"></div>
+
+    <!-- Description Section -->
+    <section class="kingscript">
+        <div id="desc" class="container">
+            <h3 class="topic">
+                <img id="icon_desc" src="/image/detailpage/icon/Icon_up.png"
+                     onclick="ShowAndHide('desc','icon_desc')" style="cursor: pointer;">
+                Product description
+            </h3>
+            <p><%= product.description || 'No description available' %></p>
+        </div>
+    </section>
+
+    <!-- Break Line -->
+    <div class="line"></div>
+
+    <!-- Reviews Section -->
+    <section class="reviews">
+        <div id="review" class="container">
+            <h3 class="topic">
+                <img id="icon_rev" src="/image/detailpage/icon/Icon_up.png"
+                     onclick="ShowAndHide('review','icon_rev')" style="cursor: pointer;">
+                Customer reviews:
+            </h3>
+            <!-- Static review template (can be made dynamic later) -->
+            <table>
+                <tr>
+                    <td rowspan="6" class="review-profile">
+                        <img id="accprofile" src="/image/detailpage/other/blankcolor.jpeg" class="acc-profile" alt="User Profile">
+                    </td>
+                    <td><b id="accname">Username</b></td>
+                </tr>
+                <tr>
+                    <td>
+                        <img id="s1" src="/image/detailpage/icon/Icon_star.png" class="icon">
+                        <img id="s2" src="/image/detailpage/icon/Icon_star.png" class="icon">
+                        <img id="s3" src="/image/detailpage/icon/Icon_star.png" class="icon">
+                        <img id="s4" src="/image/detailpage/icon/Icon_star.png" class="icon">
+                        <img id="s5" src="/image/detailpage/icon/Icon_star.png" class="icon">
+                    </td>
+                </tr>
+                <tr>
+                    <td class="review-text"><p>No reviews yet</p></td>
+                </tr>
+                <tr class="reviewimg review-rowspace">
+                    <td>
+                        <img id="img1" src="/image/detailpage/other/blankcolor.jpeg" class="review-img" alt="Review Image 1">
+                        <img id="img2" src="/image/detailpage/other/blankcolor.jpeg" class="review-img" alt="Review Image 2">
+                        <img id="img3" src="/image/detailpage/other/blankcolor.jpeg" class="review-img" alt="Review Image 3">
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <img id="like" src="/image/detailpage/icon/icon_like.png" class="icon" 
+                             style="cursor: pointer;" onclick="iconcolor('like')">
+                        <img id="dislike" src="/image/detailpage/icon/icon_dislike.png" class="icon" 
+                             style="cursor: pointer;" onclick="iconcolor('dislike')">
+                        <span style="cursor: pointer;">reply</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
+    <!-- Break Line -->
+    <div class="line"></div>
+
+    <!-- Recommend Section -->
+    <section class="Recommend">
+        <div class="container">
+            <h3 class="topic">Recommend</h3>
+            <div class="row">
+                <div class="column">
+                    <a href="/detail?pid=PRD00006">
+                        <img src="/image/home/popular/image1.png" alt="Musculine Dugtrio">
+                    </a>
+                    <div class="productnamerecom">Musculine Dugtrio</div>
+                    <div class="price">฿ 1,696</div>
+                </div>
+                <div class="column">
+                    <a href="/detail?pid=PRD00007">
+                        <img src="/image/home/popular/image2.png" alt="Frieren">
+                    </a>
+                    <div class="productnamerecom">Frieren</div>
+                    <div class="price">฿ 1,500</div>
+                </div>
+                <div class="column">
+                    <a href="/detail?pid=PRD00008">
+                        <img src="/image/home/popular/image3.png" alt="Venti (Secret)">
+                    </a>
+                    <div class="productnamerecom">Venti (Secret)</div>
+                    <div class="price">฿ 380</div>
+                </div>
+                <div class="column">
+                    <a href="/detail?pid=PRD00009">
+                        <img src="/image/home/popular/image4.png" alt="Jingyuan">
+                    </a>
+                    <div class="productnamerecom">Jingyuan</div>
+                    <div class="price">฿ 750</div>
+                </div>
+                <div class="column">
+                    <a href="/detail?pid=PRD00010">
+                        <img src="/image/home/popular/image5.png" alt="Turbo Granny Figure">
+                    </a>
+                    <div class="productnamerecom">Turbo Granny Figure</div>
+                    <div class="price">฿ 550</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <section class="footer1">
+        <div class="Fcontainer" style="padding: 0;">
+            <div class="Fwarp d-flex justify-content-start align-items-center" style="gap: 10px;">
+                <div class="Fsplit2">
+                    <strong><b>FOLLOW US ON</b></strong>
+                </div>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://linkedin.com" target="_blank"><i class="fab fa-discord"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="footer2">
+        <h1 class="Fhead">Thank You For Choosing Our Shop</h1>
+        <div class="Fwarp">
+            <div class="Fcontent">
+                <div class="Fblock">
+                    <div class="Ftitle">CONTACT US</div>
+                    <a href="#" class="Flink">collectopia@dscalc</a>
+                    <a href="#" class="Flink">069 696 6969</a>
+                </div>
+            </div>
+            <div class="Fblock">
+                <div class="Ftitle">SUPPORT</div>
+                <a href="#" class="Flink">FAQ</a>
+                <a href="#" class="Flink">SHIPPING INFO</a>
+                <a href="#" class="Flink">PRIVACY POLICY</a>
+                <a href="#" class="Flink">TERMS & CONDITIONS</a>
+                <a href="#" class="Flink">TRACK YOUR ORDER</a>
+            </div>
+            <div class="Fblock">
+                <div class="Ftitle">ABOUT US</div>
+                <a href="#" class="Flink">NEWS</a>
+                <a href="#" class="Flink">ABOUT COLLECTOPIA</a>
+                <a href="#" class="Flink">INVESTOR RELATIONS</a>
+                <a href="#" class="Flink">CONTACT US</a>
+            </div>
+            <div class="Fblock">
+                <div class="Ftitle">SHOP</div>
+                <a href="#" class="Flink">TREANDING</a>
+                <a href="#" class="Flink">BLIND BOX</a>
+                <a href="#" class="Flink">COLLECTION</a>
+                <a href="#" class="Flink">ANIME</a>
+                <a href="#" class="Flink">GAME</a>
+            </div>
+        </div>
+        <div class="copyright">© 2025 COLLECTOPIA ALL RIGHTS RESERVED</div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

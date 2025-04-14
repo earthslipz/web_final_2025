@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Collectopia</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="js/home.js" defer></script>
+    <link rel="stylesheet" href="css/home.css"/>
+    <style>
+        .social-icons {
+            margin-top: 10px;
+        }
+        .social-icons a {
+            display: inline-block;
+            margin: 0 10px;
+            font-size: 20px;
+            color: black;
+            transition: color 0.3s;
+        }
+        .social-icons a:hover {
+            color: #007bff;
+        }
+    </style>
+</head>
+
+<body>
+
+  <nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">
+        <img src="../image/logo.png" alt="Collectopia" class="logo">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link" href="/home">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="/category">Category</a></li>
+          <li class="nav-item"><a class="nav-link" href="/team">Team</a></li>
+          <li class="nav-item"><a class="nav-link" href="/search">Search</a></li>
+          <li class="nav-item"><a class="nav-link" href="/login">Sign-in/Register</a></li>
+          <li class="nav-item"><a class="nav-link" href="/admin">Profile</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+    <div class="slideshow-container">
+        <div class="mySlides fade">
+          <div class="numbertext"></div>
+          <img src="/image/home/genshin.png" style="width:100%">
+          <div class="text"></div>
+        </div>
+        <div class="mySlides fade">
+          <div class="numbertext"></div>
+          <img src="/image/home/haikyuu.png" style="width:100%">
+          <div class="text"></div>
+        </div>
+        <div class="mySlides fade">
+          <div class="numbertext"></div>
+          <img src="/image/home/dimo.png" style="width:100%">
+          <div class="text"></div>
+        </div>
+        <a class="prev" onclick="window.plusSlides(-1)">❮</a>
+        <a class="next" onclick="window.plusSlides(1)">❯</a>
+
+        <div style="text-align:center">
+            <span class="dot" onclick="goToSlide(1)"></span>
+            <span class="dot" onclick="goToSlide(2)"></span>
+            <span class="dot" onclick="goToSlide(3)"></span>
+        </div>
+    </div>
+    <br>
+
+    <section class="newarrival">
+        <div class="container">
+            <h1 class="topic">New Arrival</h1> 
+            <div class="row">
+                <div class="column">
+                    <a href="/detail?pid=PRD00001">
+                        <img src="/image/home/newarrival/image1.png" alt="Product 1">
+                    </a>
+                    <div class="description">Small Totoro with Mandarin</div>
+                    <div class="price">฿ 3,333</div>
+                </div>
+                <div class="column">
+                    <a href="/detail?pid=PRD00002">
+                        <img src="/image/home/newarrival/image2.png" alt="Product 2">
+                    </a>
+                    <div class="description">Little Red Mimia - Once Upon a Time Series</div>
+                    <div class="price">฿ 999</div>
+                </div>
+                <div class="column">
+                    <a href="/detail?pid=PRD00003">
+                        <img src="/image/home/newarrival/image3.png" alt="Product 3">
+                    </a>
+                    <div class="description">Impact Hu Tao Happy Shake</div>
+                    <div class="price">฿ 690</div>
+                </div>
+                <div class="column">
+                    <a href="/detail?pid=PRD00004">
+                        <img src="/image/home/newarrival/image4.png" alt="Product 4">
+                    </a>
+                    <div class="description">Choso Luminasta Shibuya Incident</div>
+                    <div class="price">฿ 2,500</div>
+                </div>
+                <div class="column">
+                    <a href="/detail?pid=PRD00005">
+                        <img src="/image/home/newarrival/image5.png" alt="Product 5">
+                    </a>
+                    <div class="description">Pennywise Bishoujo</div>
+                    <div class="price">฿ 2,500</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="sec1">
+      <div class="container">
+          <h1 class="topic">For you</h1> 
+          <div class="warp">
+              <div class="splitimg">
+                  <img class="insplit" src="/image/home/foryou/img1.png" alt="Image 1">
+              </div>
+              <div class="splitimg">
+                  <div class="class2img">
+                      <img class="topimg" src="/image/home/foryou/img2.png" alt="Image 2">
+                      <img src="/image/home/foryou/img3.png" alt="Image 3">
+                  </div>
+              </div>
+          </div>
+      </div>
+    </section>
+
+    <section class="sec1">
+        <div class="container">
+            <h1 class="topic">Popular</h1> 
+            <div class="row">
+                <div class="column">
+                    <a href="/detail?pid=PRD00006">
+                        <img src="/image/home/popular/image1.png" alt="Product 1">
+                    </a>
+                    <div class="description">Musculine Dugtrio</div>
+                    <div class="price">฿ 1,696</div>
+                </div>
+                <div class="column">
+                    <a href="/detail?pid=PRD00007">
+                        <img src="/image/home/popular/image2.png" alt="Product 2">
+                    </a>
+                    <div class="description">Frieren</div>
+                    <div class="price">฿ 1,500</div>
+                </div>
+                <div class="column">
+                    <a href="/detail?pid=PRD00008">
+                        <img src="/image/home/popular/image3.png" alt="Product 3">
+                    </a>
+                    <div class="description">Venti (Secret)</div>
+                    <div class="price">฿ 380</div>
+                </div>
+                <div class="column">
+                    <a href="/detail?pid=PRD00009">
+                        <img src="/image/home/popular/image4.png" alt="Product 4">
+                    </a>
+                    <div class="description">Jingyuan</div>
+                    <div class="price">฿ 750</div>
+                </div>
+                <div class="column">
+                    <a href="/detail?pid=PRD00010">
+                        <img src="/image/home/popular/image5.png" alt="Product 5">
+                    </a>
+                    <div class="description">Turbo Granny Figure</div>
+                    <div class="price">฿ 550</div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="column">
+                    <a href="/detail?pid=PRD00011">
+                        <img src="/image/home/popular/image6.png" alt="Product 6">
+                    </a>
+                    <div class="description">The Sophisticated</div>
+                    <div class="price">฿ 380</div>
+                </div>
+                <div class="column">
+                    <a href="/detail?pid=PRD00012">
+                        <img src="/image/home/popular/image7.png" alt="Product 7">
+                    </a>
+                    <div class="description">Rimuru Tempest</div>
+                    <div class="price">฿ 3,333</div>
+                </div>
+                <div class="column">
+                    <a href="/detail?pid=PRD00013">
+                        <img src="/image/home/popular/image8.png" alt="Product 8">
+                    </a>
+                    <div class="description">Natsume’s Book of Friend</div>
+                    <div class="price">฿ 2,500</div>
+                </div>
+                <div class="column">
+                    <a href="/detail?pid=PRD00014">
+                        <img src="/image/home/popular/image9.png" alt="Product 9">
+                    </a>
+                    <div class="description">Inuyasha</div>
+                    <div class="price">฿ 2,500</div>
+                </div>
+                <div class="column">
+                    <a href="/detail?pid=PRD00015">
+                        <img src="/image/home/popular/image10.png" alt="Product 10">
+                    </a>
+                    <div class="description">Mikasa</div>
+                    <div class="price">฿ 550</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="footer1">
+        <div class="Fcontainer" style="padding: 0;">
+            <div class="Fwarp d-flex justify-content-start align-items-center" style="gap: 10px;">
+                <div class="Fsplit2">
+                    <strong><b>FOLLOW US ON</b></strong>
+                </div>
+                <div class="social-icons">
+                    <a href="https://facebook.com" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://twitter.com" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://instagram.com" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://linkedin.com" target="_blank"><i class="fab fa-discord"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="footer2">
+        <h1 class="Fhead">Thank You For Choosing Our Shop</h1>
+        <div class="Fwarp">
+            <div class="Fcontent">
+                <div class="Fblock">
+                    <div class="Ftitle">CONTACT US</div>
+                    <a href="#" class="Flink">collectopia@dscalc</a>
+                    <a href="#" class="Flink">069 696 6969</a>
+                </div>
+            </div>
+            <div class="Fblock">
+                <div class="Ftitle">SUPPORT</div>
+                <a href="#" class="Flink">FAQ</a>
+                <a href="#" class="Flink">SHIPPING INFO</a>
+                <a href="#" class="Flink">PRIVACY POLICY</a>
+                <a href="#" class="Flink">TERMS & CONDITIONS</a>
+                <a href="#" class="Flink">TRACK YOUR ORDER</a>
+            </div>
+            <div class="Fblock">
+                <div class="Ftitle">ABOUT US</div>
+                <a href="#" class="Flink">NEWS</a>
+                <a href="#" class="Flink">ABOUT COLLECTOPIA</a>
+                <a href="#" class="Flink">INVESTOR RELATIONS</a>
+                <a href="#" class="Flink">CONTACT US</a>
+            </div>
+            <div class="Fblock">
+                <div class="Ftitle">SHOP</div>
+                <a href="#" class="Flink">TREANDING</a>
+                <a href="#" class="Flink">BLIND BOX</a>
+                <a href="#" class="Flink">COLLECTION</a>
+                <a href="#" class="Flink">ANIME</a>
+                <a href="#" class="Flink">GAME</a>
+            </div>
+        </div>
+        <div class="copyright">© 2025 COLLECTOPIA ALL RIGHT RESERVES</div>
+    </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
