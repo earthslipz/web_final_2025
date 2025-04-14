@@ -1,7 +1,6 @@
 const express = require('express');
 const path = require('path');
 const mysql = require('mysql2');
-const bcrypt = require('bcrypt');
 const multer = require('multer');
 const session = require('express-session');
 const fs = require('fs');
@@ -622,7 +621,7 @@ app.get('/detail', (req, res) => {
     const productQuery = `
         SELECT PID, PName, PShop, PCategory, PRating, PPrice, PSize, PMaterial, PYear, PImage, PDescription
         FROM postOfProduct
-        WHERE PID = ?
+        WHERE PID ==> ?
     `;
     const recommendedQuery = `
         SELECT PID, PName, PPrice, PImage
@@ -694,13 +693,11 @@ app.post('/register', upload.none(), async (req, res) => {
     }
     try {
         const UsID = await generateUsID();
-        const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(UsPassword, saltRounds);
         const query = `
             INSERT INTO UserInfo (UsID, UsFname, UsLname, UsUsername, UsPassword, UsEmail, UsAddress)
             VALUES (?, ?, ?, ?, ?, ?, ?)
         `;
-        const values = [UsID, UsFname, UsLname, UsUsername, hashedPassword, UsEmail || null, UsAddress || null];
+        const values = [UsID, UsFname, UsLname, UsUsername, UsPassword, UsEmail || null, UsAddress || null];
         connection.query(query, values, (err, results) => {
             if (err) {
                 if (err.code === 'ER_DUP_ENTRY') {
@@ -739,8 +736,7 @@ app.post('/login', upload.none(), async (req, res) => {
                 return res.status(401).json({ error: 'Invalid email or password.' });
             }
             const user = results[0];
-            const passwordMatch = await bcrypt.compare(UsPassword, user.UsPassword);
-            if (!passwordMatch) {
+            if (UsPassword !== user.UsPassword) {
                 return res.status(401).json({ error: 'Invalid email or password.' });
             }
             req.session.user = {
@@ -780,8 +776,7 @@ app.post('/adminlogin', upload.none(), async (req, res) => {
                 return res.status(401).json({ error: 'Invalid email or password.' });
             }
             const admin = results[0];
-            const passwordMatch = await bcrypt.compare(AdPassword, admin.AdPassword);
-            if (!passwordMatch) {
+            if (AdPassword !== admin.AdPassword) {
                 return res.status(401).json({ error: 'Invalid email or password.' });
             }
             req.session.user = {
@@ -856,26 +851,6 @@ app.get('/logout', (req, res) => {
 
 // Task 3: Web Services
 // 1. Authentication Web Service
-// Test Case 1:
-// method: POST
-// URL: http://localhost:3030/api/auth/admin
-// body: raw JSON
-// {
-//     "AdEmail": "admin@example.com",
-//     "AdPassword": "admin123"
-// }
-// Expected: 200, { "message": "Login successful", "adminId": "<AdID>" }
-
-// Test Case 2:
-// method: POST
-// URL: http://localhost:3030/api/auth/admin
-// body: raw JSON
-// {
-//     "AdEmail": "admin@example.com",
-//     "AdPassword": "wrongpass"
-// }
-// Expected: 401, { "error": "Invalid email or password" }
-
 app.post('/api/auth/admin', upload.none(), async (req, res) => {
     const { AdEmail, AdPassword } = req.body;
     if (!AdEmail || !AdPassword) {
@@ -892,8 +867,7 @@ app.post('/api/auth/admin', upload.none(), async (req, res) => {
                 return res.status(401).json({ error: 'Invalid email or password' });
             }
             const admin = results[0];
-            const passwordMatch = await bcrypt.compare(AdPassword, admin.AdPassword);
-            if (!passwordMatch) {
+            if (AdPassword !== admin.AdPassword) {
                 return res.status(401).json({ error: 'Invalid email or password' });
             }
             req.session.user = {
@@ -908,7 +882,7 @@ app.post('/api/auth/admin', upload.none(), async (req, res) => {
                 INSERT INTO adminLogin (AdIDLog, Adtime, Addate, AdID_FK)
                 VALUES (?, CURTIME(), CURDATE(), ?)
             `;
-            connection.query(logQuery, [AdIDLog, admin.AdID], (err) => {
+            connection.query आवी, [AdIDLog, admin.AdID], (err) => {
                 if (err) console.error('Error logging admin login:', err);
             });
             res.status(200).json({ message: 'Login successful', adminId: admin.AdID });
@@ -920,18 +894,6 @@ app.post('/api/auth/admin', upload.none(), async (req, res) => {
 });
 
 // 2. Product/Service Search and Details Web Service
-// Test Case 1 (No criteria search):
-// method: GET
-// URL: http://localhost:3030/api/products
-// body: {}
-// Expected: 200, Returns all products (e.g., [{ "PID": "PRD00001", "PName": "Product 1", ... }, ...])
-
-// Test Case 2 (Criteria search):
-// method: GET
-// URL: http://localhost:3030/api/products?name=Phone&category=Electronics&maxPrice=1000
-// body: {}
-// Expected: 200, Returns products matching criteria (e.g., [{ "PID": "PRD00002", "PName": "Smartphone", ... }])
-
 app.get('/api/products', (req, res) => {
     const { name, category, maxPrice } = req.query;
     let query = `
@@ -967,40 +929,6 @@ app.get('/api/products', (req, res) => {
 
 // 3. Product/Service Management Web Service
 // 3.1 Insert Product
-// Test Case 1:
-// method: POST
-// URL: http://localhost:3030/api/products
-// body: raw JSON
-// {
-//     "product": {
-//         "PName": "Smartwatch",
-//         "PShop": "TechBrand",
-//         "PCategory": "Electronics",
-//         "PPrice": 199.99,
-//         "PSize": "Medium",
-//         "PYear": 2023,
-//         "PQuantity": 50,
-//         "PDescription": "Latest smartwatch model"
-//     }
-// }
-// Headers: { "Authorization": "Bearer <session-id>" } (ensure admin is logged in via session)
-// Expected: 201, { "message": "Product added", "product": { "PID": "<generated>", ... } }
-
-// Test Case 2:
-// method: POST
-// URL: http://localhost:3030/api/products
-// body: raw JSON
-// {
-//     "product": {
-//         "PName": "",
-//         "PShop": "TechBrand",
-//         "PCategory": "Electronics",
-//         "PPrice": 199.99
-//     }
-// }
-// Headers: { "Authorization": "Bearer <session-id>" }
-// Expected: 400, { "error": "Required fields are missing" }
-
 app.post('/api/products', isAdmin, upload.single('PImage'), async (req, res) => {
     const { PName, PShop, PCategory, PPrice, PSize, PMaterial, PYear, PQuantity, PDescription } = req.body.product || {};
     // Validation
@@ -1059,40 +987,6 @@ app.post('/api/products', isAdmin, upload.single('PImage'), async (req, res) => 
 });
 
 // 3.2 Update Product
-// Test Case 1:
-// method: PUT
-// URL: http://localhost:3030/api/products/PRD00001
-// body: raw JSON
-// {
-//     "product": {
-//         "PName": "Updated Laptop",
-//         "PShop": "TechBrand",
-//         "PCategory": "Electronics",
-//         "PPrice": 1099.99,
-//         "PSize": "Large",
-//         "PYear": 2024,
-//         "PQuantity": 20,
-//         "PDescription": "Updated model"
-//     }
-// }
-// Headers: { "Authorization": "Bearer <session-id>" }
-// Expected: 200, { "message": "Product updated", "product": { "PID": "PRD00001", ... } }
-
-// Test Case 2:
-// method: PUT
-// URL: http://localhost:3030/api/products/PRD99999
-// body: raw JSON
-// {
-//     "product": {
-//         "PName": "Nonexistent Product",
-//         "PShop": "TechBrand",
-//         "PCategory": "Electronics",
-//         "PPrice": 999.99
-//     }
-// }
-// Headers: { "Authorization": "Bearer <session-id>" }
-// Expected: 404, { "error": "Product not found" }
-
 app.put('/api/products/:pid', isAdmin, upload.single('PImage'), (req, res) => {
     const pid = req.params.pid;
     const { PName, PShop, PCategory, PPrice, PSize, PMaterial, PYear, PQuantity, PDescription } = req.body.product || {};
@@ -1162,18 +1056,6 @@ app.put('/api/products/:pid', isAdmin, upload.single('PImage'), (req, res) => {
 });
 
 // 3.3 Delete Product
-// Test Case 1:
-// method: DELETE
-// URL: http://localhost:3030/api/products/PRD00001
-// Headers: { "Authorization": "Bearer <session-id>" }
-// Expected: 200, { "message": "Product deleted" }
-
-// Test Case 2:
-// method: DELETE
-// URL: http://localhost:3030/api/products/PRD99999
-// Headers: { "Authorization": "Bearer <session-id>" }
-// Expected: 404, { "error": "Product not found" }
-
 app.delete('/api/products/:pid', isAdmin, (req, res) => {
     const pid = req.params.pid;
     const deleteReviewsQuery = 'DELETE FROM CustomerReview WHERE PID_FK = ?';
