@@ -50,17 +50,15 @@ app.use(session({
 // Database connection
 const connection = mysql.createPool({
     connectionLimit: 10,
-    host: process.env.DB_HOST || 'mysql.railway.internal',
-    port: process.env.DB_PORT || 3306,
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASS || 'bgVkUfXGSBFnOOalvmRxtcWAFslIIarx',
-    database: process.env.DB_NAME || 'railway',
+    host: process.env.DB_HOST,
+    port: parseInt(process.env.DB_PORT, 10),
+    user: process.env.DB_USER,
+    password: process.env.DB_PASS,
+    database: process.env.DB_NAME,
     connectTimeout: 10000,
-    acquireTimeout: 10000,
     waitForConnections: true,
     queueLimit: 0
-});
-
+  });
 // Middleware to check if user is authenticated
 const isAuthenticated = (req, res, next) => {
     if (req.session.user) {
