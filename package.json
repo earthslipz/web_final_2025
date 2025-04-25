@@ -6,6 +6,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js"
   },
+  "scripts": {
+  "postinstall": "npm rebuild bcryptjs --build-from-source"
+}
   "author": "collectopia",
   "license": "ISC",
   "description": "",
