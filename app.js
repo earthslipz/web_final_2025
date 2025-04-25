@@ -1,7 +1,11 @@
 const express = require('express');
 const path = require('path');
 const mysql = require('mysql2');
+<<<<<<< HEAD
 const bcrypt = require('bcryptjs');
+=======
+const bcrypt = require('bcrypt');
+>>>>>>> dfef116414b474bfbdfa45424f5de74ab52ef3ce
 const multer = require('multer');
 const session = require('express-session');
 const fs = require('fs');
