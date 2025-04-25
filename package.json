@@ -4,16 +4,14 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js"
+    "start": "nodemon app.js",
+    "postinstall": "npm rebuild bcrypt --build-from-source"
   },
-  "scripts": {
-  "postinstall": "npm rebuild bcryptjs --build-from-source"
-}
   "author": "collectopia",
   "license": "ISC",
   "description": "",
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "ejs": "^3.1.10",
