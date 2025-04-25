@@ -88,20 +88,45 @@ app.get('/favicon.ico', (req, res) => res.status(204).end());
 app.get('/css/image/search.png', (req, res) => res.status(404).send('Search icon not found'));
 
 app.get('/', async (req, res) => {
-    try {
-        const response = await fetch(`${backendBaseUrl}/api/products?newArrivals=true&popular=true`);
-        const data = await response.json();
-        if (!response.ok) throw new Error(data.error || 'Failed to fetch products');
-        res.render('home', {
-            newArrivals: data.newArrivals || [],
-            popular: data.popular || [],
-            user: req.session.user || null
+    const newArrivalQuery = `
+        SELECT PID, PName, PPrice, PImage
+        FROM postOfProduct
+        WHERE PID IN ('PRD00001', 'PRD00002', 'PRD00003', 'PRD00004', 'PRD00005')
+        ORDER BY FIELD(PID, 'PRD00001', 'PRD00002', 'PRD00003', 'PRD00004', 'PRD00005')
+    `;
+    const popularQuery = `
+        SELECT PID, PName, PPrice, PImage
+        FROM postOfProduct
+        WHERE PID IN ('PRD00006', 'PRD00007', 'PRD00008', 'PRD00009', 'PRD00010',
+                      'PRD00011', 'PRD00012', 'PRD00013', 'PRD00014', 'PRD00015')
+        ORDER BY FIELD(PID, 'PRD00006', 'PRD00007', 'PRD00008', 'PRD00009', 'PRD00010',
+                            'PRD00011', 'PRD00012', 'PRD00013', 'PRD00014', 'PRD00015')
+    `;
+    connection.query(newArrivalQuery, (err, newArrivals) => {
+        if (err) {
+            console.error('Database error fetching new arrivals:', err);
+            return res.status(500).send('Server error');
+        }
+        connection.query(popularQuery, (err, popular) => {
+            if (err) {
+                console.error('Database error fetching popular products:', err);
+                return res.status(500).send('Server error');
+            }
+            newArrivals.forEach(product => {
+                product.PPrice = parseFloat(product.PPrice);
+            });
+            popular.forEach(product => {
+                product.PPrice = parseFloat(product.PPrice);
+            });
+            res.render('home', {
+                newArrivals,
+                popular,
+                user: req.session.user || null
+            });
         });
-    } catch (error) {
-        console.error('Error fetching home data:', error.message);
-        res.status(500).send('Server error');
-    }
+    });
 });
+
 // Home rout
 // Home route
 app.get('/home', (req, res) => {
