@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const mysql = require('mysql2');
-const bcrypt = require('bcryptjs');
+const bcrypts = require('bcryptjs');
 const multer = require('multer');
 const session = require('express-session');
 const fs = require('fs');
@@ -87,6 +87,22 @@ app.get('/favicon.ico', (req, res) => res.status(204).end());
 // Temporary fix for search.png
 app.get('/css/image/search.png', (req, res) => res.status(404).send('Search icon not found'));
 
+app.get('/', async (req, res) => {
+    try {
+        const response = await fetch(`${backendBaseUrl}/api/products?newArrivals=true&popular=true`);
+        const data = await response.json();
+        if (!response.ok) throw new Error(data.error || 'Failed to fetch products');
+        res.render('home', {
+            newArrivals: data.newArrivals || [],
+            popular: data.popular || [],
+            user: req.session.user || null
+        });
+    } catch (error) {
+        console.error('Error fetching home data:', error.message);
+        res.status(500).send('Server error');
+    }
+});
+// Home rout
 // Home route
 app.get('/home', (req, res) => {
     const newArrivalQuery = `
@@ -130,7 +146,6 @@ app.get('/home', (req, res) => {
 
 // Static routes
 const routes = {
-    '/': (req, res) => res.send('Hello World! in plain.Nontext'),
     '/team': 'team.html',
     '/signup': 'signup.html',
     '/adminlogin': 'adminlogin.html'
