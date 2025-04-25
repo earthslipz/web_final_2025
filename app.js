@@ -1,12 +1,13 @@
 const express = require('express');
 const path = require('path');
 const mysql = require('mysql2');
+const bcrypt = require('bcryptjs');
 const multer = require('multer');
 const session = require('express-session');
 const fs = require('fs');
 require('dotenv').config();
 
-const port = 30033;
+const port = 3030;
 const app = express();
 
 // Configure multer for file uploads
@@ -49,22 +50,13 @@ app.use(session({
 
 // Database connection
 const connection = mysql.createPool({
-<<<<<<< HEAD
-    host: process.env.DB_HOST || 'localhost',    
-    user: process.env.DB_USER || 'root',
-    port: process.env.DB_PORT || 3306,
-    password: process.env.DB_PASS || 'admin12345',
-    database: process.env.DB_NAME || 'collectopia'
-=======
     connectionLimit: 10,
     host: process.env.DB_HOST || 'shuttle.proxy.rlwy.net',
     user: process.env.DB_USER || 'root',
     port: process.env.DB_PORT || 30033,
     password: process.env.DB_PASS || 'bgVkUfXGSBFnOOalvmRxtcWAFslIIarx',
     database: process.env.DB_NAME || 'railway'
->>>>>>> 5eab2703396ad8776622d918ea2b2b8b3d335cfd
 });
-
 // Middleware to check if user is authenticated
 const isAuthenticated = (req, res, next) => {
     if (req.session.user) {
@@ -414,11 +406,13 @@ app.post('/add-product', isAdmin, upload.single('mainImage'), async (req, res) =
     const {
         PName, PShop, PCategory, PPrice, PSize, PMaterial, PYear, PQuantity, PDescription, PSeries
     } = req.body;
+
     // Debug logging
     console.log('Form data:', {
         PName, PShop, PCategory, PPrice, PSize, PYear, PDescription, PSeries, PMaterial, PQuantity
     });
     console.log('File:', req.file);
+
     // Validation
     const missingFields = [];
     if (!PName) missingFields.push('Product name');
@@ -429,6 +423,7 @@ app.post('/add-product', isAdmin, upload.single('mainImage'), async (req, res) =
     if (!PYear) missingFields.push('Year');
     if (!PDescription) missingFields.push('Description');
     if (!req.file) missingFields.push('Main image');
+
     if (missingFields.length > 0) {
         console.log('Missing fields:', missingFields);
         return res.render('add', {
@@ -436,9 +431,11 @@ app.post('/add-product', isAdmin, upload.single('mainImage'), async (req, res) =
             error: `Required fields are missing: ${missingFields.join(', ')}`
         });
     }
+
     const PPriceNum = parseFloat(PPrice);
     const PYearNum = parseInt(PYear);
     const PQuantityNum = parseInt(PQuantity) || 0;
+
     if (isNaN(PPriceNum) || isNaN(PYearNum)) {
         console.log('Invalid numbers:', { PPrice, PYear });
         return res.render('add', {
@@ -446,14 +443,18 @@ app.post('/add-product', isAdmin, upload.single('mainImage'), async (req, res) =
             error: 'Price and Year must be valid numbers'
         });
     }
+
     // Generate PID
     const PID = await generatePID();
+
     // Handle image
     const PImage = `/image/uploads/${req.file.filename}`;
+
     // Append Series to Description if provided
     const finalDescription = PSeries ? 
         (PDescription ? `${PDescription}\nSeries: ${PSeries}` : `Series: ${PSeries}`) : 
         PDescription;
+
     const query = `
         INSERT INTO postOfProduct (
             PID, PName, PShop, PCategory, PPrice, PSize, PMaterial, PYear, PQuantity, PImage, PDescription
@@ -472,6 +473,7 @@ app.post('/add-product', isAdmin, upload.single('mainImage'), async (req, res) =
         PImage,
         finalDescription || null
     ];
+
     connection.query(query, values, (err, result) => {
         if (err) {
             console.error('Database error inserting product:', err);
@@ -691,11 +693,13 @@ app.post('/register', upload.none(), async (req, res) => {
     }
     try {
         const UsID = await generateUsID();
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(UsPassword, saltRounds);
         const query = `
             INSERT INTO UserInfo (UsID, UsFname, UsLname, UsUsername, UsPassword, UsEmail, UsAddress)
             VALUES (?, ?, ?, ?, ?, ?, ?)
         `;
-        const values = [UsID, UsFname, UsLname, UsUsername, UsPassword, UsEmail || null, UsAddress || null];
+        const values = [UsID, UsFname, UsLname, UsUsername, hashedPassword, UsEmail || null, UsAddress || null];
         connection.query(query, values, (err, results) => {
             if (err) {
                 if (err.code === 'ER_DUP_ENTRY') {
@@ -734,7 +738,8 @@ app.post('/login', upload.none(), async (req, res) => {
                 return res.status(401).json({ error: 'Invalid email or password.' });
             }
             const user = results[0];
-            if (UsPassword !== user.UsPassword) {
+            const passwordMatch = await bcrypt.compare(UsPassword, user.UsPassword);
+            if (!passwordMatch) {
                 return res.status(401).json({ error: 'Invalid email or password.' });
             }
             req.session.user = {
@@ -774,7 +779,8 @@ app.post('/adminlogin', upload.none(), async (req, res) => {
                 return res.status(401).json({ error: 'Invalid email or password.' });
             }
             const admin = results[0];
-            if (AdPassword !== admin.AdPassword) {
+            const passwordMatch = await bcrypt.compare(AdPassword, admin.AdPassword);
+            if (!passwordMatch) {
                 return res.status(401).json({ error: 'Invalid email or password.' });
             }
             req.session.user = {
@@ -849,6 +855,26 @@ app.get('/logout', (req, res) => {
 
 // Task 3: Web Services
 // 1. Authentication Web Service
+// Test Case 1:
+// method: POST
+// URL: http://localhost:3030/api/auth/admin
+// body: raw JSON
+// {
+//     "AdEmail": "admin@example.com",
+//     "AdPassword": "admin123"
+// }
+// Expected: 200, { "message": "Login successful", "adminId": "<AdID>" }
+
+// Test Case 2:
+// method: POST
+// URL: http://localhost:3030/api/auth/admin
+// body: raw JSON
+// {
+//     "AdEmail": "admin@example.com",
+//     "AdPassword": "wrongpass"
+// }
+// Expected: 401, { "error": "Invalid email or password" }
+
 app.post('/api/auth/admin', upload.none(), async (req, res) => {
     const { AdEmail, AdPassword } = req.body;
     if (!AdEmail || !AdPassword) {
@@ -865,7 +891,8 @@ app.post('/api/auth/admin', upload.none(), async (req, res) => {
                 return res.status(401).json({ error: 'Invalid email or password' });
             }
             const admin = results[0];
-            if (AdPassword !== admin.AdPassword) {
+            const passwordMatch = await bcrypt.compare(AdPassword, admin.AdPassword);
+            if (!passwordMatch) {
                 return res.status(401).json({ error: 'Invalid email or password' });
             }
             req.session.user = {
@@ -892,6 +919,18 @@ app.post('/api/auth/admin', upload.none(), async (req, res) => {
 });
 
 // 2. Product/Service Search and Details Web Service
+// Test Case 1 (No criteria search):
+// method: GET
+// URL: http://localhost:3030/api/products
+// body: {}
+// Expected: 200, Returns all products (e.g., [{ "PID": "PRD00001", "PName": "Product 1", ... }, ...])
+
+// Test Case 2 (Criteria search):
+// method: GET
+// URL: http://localhost:3030/api/products?name=Phone&category=Electronics&maxPrice=1000
+// body: {}
+// Expected: 200, Returns products matching criteria (e.g., [{ "PID": "PRD00002", "PName": "Smartphone", ... }])
+
 app.get('/api/products', (req, res) => {
     const { name, category, maxPrice } = req.query;
     let query = `
@@ -927,6 +966,40 @@ app.get('/api/products', (req, res) => {
 
 // 3. Product/Service Management Web Service
 // 3.1 Insert Product
+// Test Case 1:
+// method: POST
+// URL: http://localhost:3030/api/products
+// body: raw JSON
+// {
+//     "product": {
+//         "PName": "Smartwatch",
+//         "PShop": "TechBrand",
+//         "PCategory": "Electronics",
+//         "PPrice": 199.99,
+//         "PSize": "Medium",
+//         "PYear": 2023,
+//         "PQuantity": 50,
+//         "PDescription": "Latest smartwatch model"
+//     }
+// }
+// Headers: { "Authorization": "Bearer <session-id>" } (ensure admin is logged in via session)
+// Expected: 201, { "message": "Product added", "product": { "PID": "<generated>", ... } }
+
+// Test Case 2:
+// method: POST
+// URL: http://localhost:3030/api/products
+// body: raw JSON
+// {
+//     "product": {
+//         "PName": "",
+//         "PShop": "TechBrand",
+//         "PCategory": "Electronics",
+//         "PPrice": 199.99
+//     }
+// }
+// Headers: { "Authorization": "Bearer <session-id>" }
+// Expected: 400, { "error": "Required fields are missing" }
+
 app.post('/api/products', isAdmin, upload.single('PImage'), async (req, res) => {
     const { PName, PShop, PCategory, PPrice, PSize, PMaterial, PYear, PQuantity, PDescription } = req.body.product || {};
     // Validation
@@ -985,6 +1058,40 @@ app.post('/api/products', isAdmin, upload.single('PImage'), async (req, res) => 
 });
 
 // 3.2 Update Product
+// Test Case 1:
+// method: PUT
+// URL: http://localhost:3030/api/products/PRD00001
+// body: raw JSON
+// {
+//     "product": {
+//         "PName": "Updated Laptop",
+//         "PShop": "TechBrand",
+//         "PCategory": "Electronics",
+//         "PPrice": 1099.99,
+//         "PSize": "Large",
+//         "PYear": 2024,
+//         "PQuantity": 20,
+//         "PDescription": "Updated model"
+//     }
+// }
+// Headers: { "Authorization": "Bearer <session-id>" }
+// Expected: 200, { "message": "Product updated", "product": { "PID": "PRD00001", ... } }
+
+// Test Case 2:
+// method: PUT
+// URL: http://localhost:3030/api/products/PRD99999
+// body: raw JSON
+// {
+//     "product": {
+//         "PName": "Nonexistent Product",
+//         "PShop": "TechBrand",
+//         "PCategory": "Electronics",
+//         "PPrice": 999.99
+//     }
+// }
+// Headers: { "Authorization": "Bearer <session-id>" }
+// Expected: 404, { "error": "Product not found" }
+
 app.put('/api/products/:pid', isAdmin, upload.single('PImage'), (req, res) => {
     const pid = req.params.pid;
     const { PName, PShop, PCategory, PPrice, PSize, PMaterial, PYear, PQuantity, PDescription } = req.body.product || {};
@@ -1001,7 +1108,7 @@ app.put('/api/products/:pid', isAdmin, upload.single('PImage'), (req, res) => {
     }
     const PPriceNum = parseFloat(PPrice);
     const PYearNum = parseInt(PYear);
-    const PREMIUM = parseInt(PQuantity) || 0;
+    const PQuantityNum = parseInt(PQuantity) || 0;
     if (isNaN(PPriceNum) || isNaN(PYearNum)) {
         return res.status(400).json({ error: 'Price and Year must be valid numbers' });
     }
@@ -1032,7 +1139,7 @@ app.put('/api/products/:pid', isAdmin, upload.single('PImage'), (req, res) => {
         PPriceNum,
         PSize,
         PMaterial || null,
-        PYearNum  = parseInt(PYear),
+        PYearNum,
         PQuantityNum,
         PImage,
         PDescription || null,
@@ -1054,6 +1161,18 @@ app.put('/api/products/:pid', isAdmin, upload.single('PImage'), (req, res) => {
 });
 
 // 3.3 Delete Product
+// Test Case 1:
+// method: DELETE
+// URL: http://localhost:3030/api/products/PRD00001
+// Headers: { "Authorization": "Bearer <session-id>" }
+// Expected: 200, { "message": "Product deleted" }
+
+// Test Case 2:
+// method: DELETE
+// URL: http://localhost:3030/api/products/PRD99999
+// Headers: { "Authorization": "Bearer <session-id>" }
+// Expected: 404, { "error": "Product not found" }
+
 app.delete('/api/products/:pid', isAdmin, (req, res) => {
     const pid = req.params.pid;
     const deleteReviewsQuery = 'DELETE FROM CustomerReview WHERE PID_FK = ?';
