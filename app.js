@@ -50,16 +50,11 @@ app.use(session({
 
 // Database connection
 const connection = mysql.createPool({
-    connectionLimit: 10,
-    host: process.env.DB_HOST || '127.0.0.1',
+    host: process.env.DB_HOST || 'localhost',    
+    user: process.env.DB_USER || 'root',
     port: process.env.DB_PORT || 3306,
-    user: process.env.DB_USER || 'server',
-    password: process.env.DB_PASS || 'localhost12345',
-    database: process.env.DB_NAME || 'collectopia',
-    connectTimeout: 10000, // 10 วินาที
-    acquireTimeout: 10000,
-    waitForConnections: true,
-    queueLimit: 0
+    password: process.env.DB_PASS || 'admin12345',
+    database: process.env.DB_NAME || 'collectopia'
 });
 // Middleware to check if user is authenticated
 const isAuthenticated = (req, res, next) => {

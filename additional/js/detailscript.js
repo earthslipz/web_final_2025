@@ -222,4 +222,46 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
+// /js/detailscript.js
+document.addEventListener('DOMContentLoaded', () => {
+  // ดึงค่า PRating จาก HTML (ถูกฝังโดย EJS)
+  const ratingElement = document.querySelector('h6#norating');
+  const rating = parseFloat(ratingElement.textContent) || 0; // แปลงเป็นตัวเลข หรือ 0 ถ้าเป็น 'N/A'
 
+  // ดึง element ของดาวทั้ง 5 ดวง
+  const stars = [
+      document.getElementById('s1'),
+      document.getElementById('s2'),
+      document.getElementById('s3'),
+      document.getElementById('s4'),
+      document.getElementById('s5')
+  ];
+
+  // คำนวณจำนวนดาวเต็มและดาวครึ่ง
+  const fullStars = Math.floor(rating); // จำนวนดาวเต็ม
+  const hasHalfStar = rating % 1 >= 0.5; // ตรวจสอบว่ามีดาวครึ่งดวงหรือไม่
+
+  // อัปเดตรูปภาพดาว
+  stars.forEach((star, index) => {
+      if (index < fullStars) {
+          // ดาวเต็ม
+          star.src = '/image/detailpage/icon/Icon_star_filled.png';
+      } else if (index === fullStars && hasHalfStar) {
+          // ดาวครึ่งดวง
+          star.src = '/image/detailpage/icon/Icon_star_half.png';
+      } else {
+          // ดาวว่าง
+          star.src = '/image/detailpage/icon/Icon_star_empty.png';
+      }
+  });
+});
+const productStars = document.querySelectorAll('.ProductDetail-flexrow[alt="rating star"] .star');
+productStars.forEach((star, index) => {
+    if (index < fullStars) {
+        star.src = '/image/detailpage/icon/Icon_star_filled.png';
+    } else if (index === fullStars && hasHalfStar) {
+        star.src = '/image/detailpage/icon/Icon_star_half.png';
+    } else {
+        star.src = '/image/detailpage/icon/Icon_star_empty.png';
+    }
+});
