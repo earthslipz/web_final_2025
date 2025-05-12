@@ -51,7 +51,7 @@ app.use(session({
 // Database connection
 const connection = mysql.createPool({
     connectionLimit: 10,
-    host: process.env.DB_HOST || 'shuttle.proxy.rlwy.net',
+    host: process.env.DB_HOST || 'metro.proxy.rlwy.net',
     user: process.env.DB_USER || 'root',
     port: process.env.DB_PORT || 14612,
     password: process.env.DB_PASS || 'WmqHRkMPPJaRyaGqWkXkxHejUIxcjfJY',
